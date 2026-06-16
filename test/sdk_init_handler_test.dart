@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:personaclick_flutter_sdk/src/init/sdk_init_handler.dart';
-import 'package:personaclick_flutter_sdk/src/pigeon/personalization_api.g.dart'
-    as pigeon;
-import 'package:personaclick_flutter_sdk/src/sdk_init_config.dart';
+import 'package:personaclick_sdk/src/init/sdk_init_handler.dart';
+import 'package:personaclick_sdk/src/pigeon/personalization_api.g.dart' as pigeon;
+import 'package:personaclick_sdk/src/sdk_init_config.dart';
 
 const _initChannel =
     'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.initialize';

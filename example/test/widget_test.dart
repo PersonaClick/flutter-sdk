@@ -7,7 +7,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:personaclick_flutter_sdk_example/main.dart';
+import 'package:personaclick_sdk_example/main.dart';
 
 void main() {
   testWidgets('Renders init demo page', (WidgetTester tester) async {

@@ -2,9 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:personaclick_flutter_sdk/personaclick_flutter_sdk.dart';
-import 'package:personaclick_flutter_sdk/src/pigeon/personalization_api.g.dart'
-    as pigeon;
+import 'package:personaclick_sdk/personaclick_sdk.dart';
+import 'package:personaclick_sdk/src/pigeon/personalization_api.g.dart' as pigeon;
 
 const _stubJson = {
   'id': 'item-42',
