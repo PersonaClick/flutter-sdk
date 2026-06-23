@@ -14,7 +14,7 @@ Flutter plugin wrapper around PERSONACLICK native SDK.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'PERSONACLICK', '3.23.0'
+  s.dependency 'PERSONACLICK', '3.28.0'
   s.platform = :ios, '13.0'
 
   # Flutter.framework does not contain a i386 slice.

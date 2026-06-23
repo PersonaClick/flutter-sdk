@@ -81,13 +81,15 @@ android {
 }
 
 dependencies {
-    // PERSONACLICK Android SDK (Maven Central).
+    // PERSONACLICK Android SDK (JitPack).
     //
-    // Note: the 2.x line in Maven Central uses versions like 2.6.0 (not 2.28.0).
-    val personaclickAndroidSdkVersion = "2.6.0"
+    // Published from github.com/personaclick/android-sdk as `com.github.personaclick:android-sdk:<tag>`.
+    // v2.33.0 is the first release that exposes the loyalty manager
+    // (`SDK.instance.loyaltyManager`).
+    val personaclickAndroidSdkVersion = "v2.33.0"
     add(
         "personaclickImplementation",
-        "com.personaclick:personaclick-sdk:$personaclickAndroidSdkVersion",
+        "com.github.personaclick:android-sdk:$personaclickAndroidSdkVersion",
     )
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
