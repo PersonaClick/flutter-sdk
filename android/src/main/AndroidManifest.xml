@@ -1,3 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.personaclick.personaclick_flutter_sdk">
+  <application>
+    <!--
+      Installs the push display listener at process start so pushes appear even when the app has
+      been swiped away (cold process, no Flutter engine running). See PersonaclickPushInitProvider.
+    -->
+    <provider
+      android:name="com.personaclick.personaclick_flutter_sdk.push.PersonaclickPushInitProvider"
+      android:authorities="${applicationId}.personaclickpushinitprovider"
+      android:exported="false" />
+  </application>
 </manifest>
