@@ -84,13 +84,17 @@ dependencies {
     // PERSONACLICK Android SDK (JitPack).
     //
     // Published from github.com/personaclick/android-sdk as `com.github.personaclick:android-sdk:<tag>`.
-    // v2.33.0 is the first release that exposes the loyalty manager
-    // (`SDK.instance.loyaltyManager`).
-    val personaclickAndroidSdkVersion = "v2.33.0"
+    // v2.34.0 adds the catalog read managers (profile, product counters,
+    // category, collection) on top of the loyalty manager (v2.33.0).
+    val personaclickAndroidSdkVersion = "v2.34.0"
     add(
         "personaclickImplementation",
         "com.github.personaclick:android-sdk:$personaclickAndroidSdkVersion",
     )
+
+    // Used directly by the push presenter (NotificationCompat / ContextCompat). The native SDK
+    // depends on the same version but as `implementation`, so it is not exposed transitively.
+    implementation("androidx.core:core-ktx:1.13.1")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.mockito:mockito-core:5.0.0")
