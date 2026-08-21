@@ -61,6 +61,11 @@ android {
 
     defaultConfig {
         minSdk = 24
+        // The PERSONACLICK Android library is flavored on a `default` dimension
+        // (personaclick / personaclick); this plugin has no such dimension. Tell Gradle
+        // which flavor to consume. A no-op for the single-variant JitPack artifact;
+        // required when the SDK is consumed from source (local `includeBuild`).
+        missingDimensionStrategy("default", "personaclick")
     }
 
     testOptions {
@@ -82,11 +87,9 @@ android {
 
 dependencies {
     // PERSONACLICK Android SDK (JitPack).
-    //
     // Published from github.com/personaclick/android-sdk as `com.github.personaclick:android-sdk:<tag>`.
-    // v2.34.0 adds the catalog read managers (profile, product counters,
-    // category, collection) on top of the loyalty manager (v2.33.0).
-    val personaclickAndroidSdkVersion = "v2.34.0"
+    // v2.36.0 is the first tag that ships the multi-instance `Personaclick` facade.
+    val personaclickAndroidSdkVersion = "v2.36.0"
     add(
         "personaclickImplementation",
         "com.github.personaclick:android-sdk:$personaclickAndroidSdkVersion",
