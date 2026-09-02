@@ -86,14 +86,9 @@ android {
 }
 
 dependencies {
-    // PERSONACLICK Android SDK (JitPack).
-    // Published from github.com/personaclick/android-sdk as `com.github.personaclick:android-sdk:<tag>`.
-    // v2.36.0 is the first tag that ships the multi-instance `Personaclick` facade.
-    val personaclickAndroidSdkVersion = "v2.36.0"
-    add(
-        "personaclickImplementation",
-        "com.github.personaclick:android-sdk:$personaclickAndroidSdkVersion",
-    )
+    // PERSONACLICK Android SDK.
+    val personaclickAndroidSdkVersion = "v2.37.0"
+    add("personaclickImplementation", "com.github.personaclick:android-sdk:$personaclickAndroidSdkVersion")
 
     // Used directly by the push presenter (NotificationCompat / ContextCompat). The native SDK
     // depends on the same version but as `implementation`, so it is not exposed transitively.
