@@ -87,7 +87,7 @@ android {
 
 dependencies {
     // PERSONACLICK Android SDK.
-    val personaclickAndroidSdkVersion = "v2.37.0"
+    val personaclickAndroidSdkVersion = "v2.38.0"
     add("personaclickImplementation", "com.github.personaclick:android-sdk:$personaclickAndroidSdkVersion")
 
     // Used directly by the push presenter (NotificationCompat / ContextCompat). The native SDK
