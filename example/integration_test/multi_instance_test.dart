@@ -9,7 +9,7 @@ import 'patrol_setup.dart';
 /// On-device E2E for the multi-instance screen — mirror of the native
 /// `MultiInstanceE2ETest` (Android) / `multi-instance.e2e.js` (RN). Opening the
 /// screen makes shop A (eager) and shop B (lazy → materialized) both live, so the
-/// fail-fast contracts and `Personaclick.handlePush` routing run with two real shops in
+/// fail-fast contracts and `PersonaClick.handlePush` routing run with two real shops in
 /// one process. Runs on an emulator/simulator like the other `*_sdk_test.dart`.
 ///
 /// Reads the deterministic result labels the screen exposes (`mi-contract-result`
@@ -24,7 +24,7 @@ void main() {
   Future<void> openMultiInstance(PatrolIntegrationTester $) async {
     await $.pumpWidgetAndSettle(const app.App());
     await dismissStartupPermissionDialog($);
-    await $('PERSONACLICK SDK init demo').waitUntilVisible();
+    await $('PersonaClick SDK init demo').waitUntilVisible();
     await $(const Key('open-multi-instance')).tap();
     await $('Two shops, one app').waitUntilVisible();
   }

@@ -30,7 +30,7 @@ class MainActivity : FlutterActivity() {
 
     private fun ensureNotificationPermission() {
         // On Android 13+ POST_NOTIFICATIONS is a runtime permission; without it the OS
-        // silently drops every notification. The native PERSONACLICK demo requests it the same
+        // silently drops every notification. The native PersonaClick demo requests it the same
         // way, so the Flutter host must too, otherwise pushes never appear.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val granted = checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) ==

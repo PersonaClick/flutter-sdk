@@ -1,17 +1,17 @@
 import '../sdk_init_config.dart';
 
 /// Configuration for one SDK instance (one shop), passed to
-/// [Personaclick.initialize] / [Personaclick.registerShops].
+/// [PersonaClick.initialize] / [PersonaClick.registerShops].
 ///
-/// Mirrors the native `PersonaclickConfig` (Android/iOS). It is a superset of the
+/// Mirrors the native `PersonaClickConfig` (Android/iOS). It is a superset of the
 /// legacy [SdkInitConfig]: the same init fields plus an optional [storageKey]
 /// for the storage-partition key (defaults to `shopId` natively).
 ///
 /// `storageKey` is **reserved for parity** and not wired end-to-end yet: the
 /// Pigeon `InitConfig` has no `storageKey` field, so the native default
 /// (partition == `shopId`) applies until the bridge threads it (plan step F2).
-class PersonaclickConfig {
-  const PersonaclickConfig({
+class PersonaClickConfig {
+  const PersonaClickConfig({
     required this.shopId,
     this.apiDomain,
     this.stream,
@@ -49,7 +49,7 @@ class PersonaclickConfig {
     needReInitialization: needReInitialization,
   );
 
-  PersonaclickConfig copyWith({String? shopId, String? storageKey}) => PersonaclickConfig(
+  PersonaClickConfig copyWith({String? shopId, String? storageKey}) => PersonaClickConfig(
     shopId: shopId ?? this.shopId,
     apiDomain: apiDomain,
     stream: stream,

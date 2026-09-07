@@ -11,10 +11,10 @@ import kotlin.test.assertTrue
  * you can run them directly from IDEs that support JUnit such as Android Studio.
  */
 
-internal class PersonaclickFlutterSdkPluginTest {
+internal class PersonaClickFlutterSdkPluginTest {
     @Test
     fun getPlatformVersion_containsAndroidWord() {
-        val plugin = PersonaclickFlutterSdkPlugin()
+        val plugin = PersonaClickFlutterSdkPlugin()
         assertTrue(plugin.getPlatformVersion().startsWith("Android "))
     }
 }

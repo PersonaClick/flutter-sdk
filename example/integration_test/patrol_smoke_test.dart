@@ -9,7 +9,7 @@ void main() {
     await $.pumpWidgetAndSettle(const app.App());
     await dismissStartupPermissionDialog($);
 
-    await $('PERSONACLICK SDK init demo').waitUntilVisible();
+    await $('PersonaClick SDK init demo').waitUntilVisible();
     await $('Initialization').waitUntilVisible();
     await $('Stored push token').waitUntilVisible();
     // Tracking is the last section of a long form. Each scroll relies on fling

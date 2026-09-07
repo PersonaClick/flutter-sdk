@@ -12,6 +12,6 @@ import 'package:personaclick_sdk_example/main.dart';
 void main() {
   testWidgets('Renders init demo page', (WidgetTester tester) async {
     await tester.pumpWidget(const App());
-    expect(find.text('PERSONACLICK SDK init demo'), findsOneWidget);
+    expect(find.text('PersonaClick SDK init demo'), findsOneWidget);
   });
 }

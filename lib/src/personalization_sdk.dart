@@ -27,8 +27,8 @@ class PersonalizationSdk {
   final PushNotificationCallbacks _pushCallbacks = PushNotificationCallbacks();
 
   /// The shop this handle is bound to, or `null` for the legacy default
-  /// instance. Set by [Personaclick.initialize] / [Personaclick.getInstance]. Reserved for
-  /// per-call routing once the native `Personaclick` facade is wired (plan step F3);
+  /// instance. Set by [PersonaClick.initialize] / [PersonaClick.getInstance]. Reserved for
+  /// per-call routing once the native `PersonaClick` facade is wired (plan step F3);
   /// stored now so multi-instance handles carry their identity.
   final String? shopId;
 
@@ -67,15 +67,15 @@ class PersonalizationSdk {
     return _api.getStoredPushToken(shopId);
   }
 
-  /// Routes [payload] to the native `Personaclick.handlePush` for [event] (the entry a
-  /// host with its own messaging service calls). Prefer [Personaclick.handlePush],
+  /// Routes [payload] to the native `PersonaClick.handlePush` for [event] (the entry a
+  /// host with its own messaging service calls). Prefer [PersonaClick.handlePush],
   /// which resolves the target shop and drops unroutable pushes first.
   Future<void> handlePush(Map<String, String> payload, PushEvent event) {
     return _api.handlePush(payload, event.index);
   }
 
   /// Fires this handle's registered push callbacks for [event]. Used by
-  /// [Personaclick.handlePush] to deliver an inbound push to the shop it routed to,
+  /// [PersonaClick.handlePush] to deliver an inbound push to the shop it routed to,
   /// independent of the process-global Pigeon push channel (real FCM inbound
   /// routing by `shop_id` is FL-5).
   void dispatchInboundPush(PushEvent event, Map<String, String?> payload) {

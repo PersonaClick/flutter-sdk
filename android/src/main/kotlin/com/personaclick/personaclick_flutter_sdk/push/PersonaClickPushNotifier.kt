@@ -17,8 +17,8 @@ import com.personaclick.personaclick_flutter_sdk.R
 import java.net.URL
 
 /**
- * Posts a heads-up BigPicture notification from PERSONACLICK push data — the native equivalent of the
- * PERSONACLICK React Native demo's notifee BIGPICTURE notification (and of the android-sdk demo's
+ * Posts a heads-up BigPicture notification from PersonaClick push data — the native equivalent of the
+ * PersonaClick React Native demo's notifee BIGPICTURE notification (and of the android-sdk demo's
  * display).
  *
  * Why not the SDK's built-in [com.personalization.features.notification.presentation.helpers.NotificationHelper]:
@@ -29,10 +29,10 @@ import java.net.URL
  *
  * [show] downloads images synchronously, so it must be called off the main thread.
  */
-object PersonaclickPushNotifier {
+object PersonaClickPushNotifier {
 
     /** Logcat tag — unconditional, so push display can be traced without SDK debug mode. */
-    const val TAG = "PersonaclickPush"
+    const val TAG = "PersonaClickPush"
 
     /** Distinct from the SDK's own LOW-importance "notification_channel" so HIGH importance sticks. */
     const val CHANNEL_ID = "personaclick_push"
@@ -137,7 +137,7 @@ object PersonaclickPushNotifier {
     }
 
     /**
-     * Resolves the small icon so the notification carries the HOST app's branding, never PERSONACLICK's.
+     * Resolves the small icon so the notification carries the HOST app's branding, never PersonaClick's.
      *
      * Order mirrors FCM's `default_notification_icon` handling:
      *  1. A host-declared icon via [META_DATA_ICON] manifest meta-data. This is the recommended
@@ -145,10 +145,10 @@ object PersonaclickPushNotifier {
      *     full-colour launcher icon is not.
      *  2. The host's existing Firebase [FIREBASE_META_DATA_ICON], so an FCM icon that is already
      *     configured is reused without the host duplicating it under our key.
-     *  3. The host app's launcher icon, so the branding is still the client's (not PERSONACLICK's) even
+     *  3. The host app's launcher icon, so the branding is still the client's (not PersonaClick's) even
      *     when no dedicated icon is configured.
      *  4. A neutral, non-branded default ([R.drawable.ic_personaclick_push_default], a plain white disc),
-     *     only as a last resort if the host has no icon at all. Never PERSONACLICK branding.
+     *     only as a last resort if the host has no icon at all. Never PersonaClick branding.
      */
     private fun resolveSmallIcon(context: Context): Int {
         val appInfo = try {

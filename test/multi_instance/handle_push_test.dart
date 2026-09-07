@@ -5,9 +5,9 @@ import 'package:personaclick_sdk/src/multi_instance/personaclick_config.dart';
 import 'package:personaclick_sdk/src/personalization_sdk.dart';
 import 'package:personaclick_sdk/src/pigeon/personalization_api.g.dart' as pigeon;
 
-/// F4 contract: [Personaclick.handlePush] resolves the target shop from the payload's
+/// F4 contract: [PersonaClick.handlePush] resolves the target shop from the payload's
 /// `shop_id` (drop on unknown/ambiguous), tracks natively, and fires that shop's
-/// callbacks — mirror of the native `Personaclick.handlePush` routing.
+/// callbacks — mirror of the native `PersonaClick.handlePush` routing.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -17,7 +17,7 @@ void main() {
   late List<List<Object?>> nativeCalls;
   late Map<String, PersonalizationSdk> handles;
 
-  PersonaclickConfig cfg(String shopId) => PersonaclickConfig(shopId: shopId);
+  PersonaClickConfig cfg(String shopId) => PersonaClickConfig(shopId: shopId);
 
   Map<String, String> push(String? shopId) => {
     'shop_id': ?shopId,
@@ -42,7 +42,7 @@ void main() {
             <Object?>[],
           );
         });
-    Personaclick.debugFactory = (config) {
+    PersonaClick.debugFactory = (config) {
       final sdk = PersonalizationSdk(shopId: config.shopId);
       handles[config.shopId] = sdk;
       return sdk;
@@ -52,14 +52,14 @@ void main() {
   tearDown(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMessageHandler(handlePushChannel, null);
-    Personaclick.reset();
+    PersonaClick.reset();
   });
 
   test('routes to the shop named by shop_id and tracks natively', () async {
-    Personaclick.initialize(cfg('A'));
-    Personaclick.initialize(cfg('B'));
+    PersonaClick.initialize(cfg('A'));
+    PersonaClick.initialize(cfg('B'));
 
-    final routed = await Personaclick.handlePush(push('B'), PushEvent.received);
+    final routed = await PersonaClick.handlePush(push('B'), PushEvent.received);
 
     expect(routed, 'B');
     expect(nativeCalls, hasLength(1));
@@ -67,52 +67,52 @@ void main() {
   });
 
   test('unknown shop is dropped — no native call', () async {
-    Personaclick.initialize(cfg('A'));
+    PersonaClick.initialize(cfg('A'));
 
-    final routed = await Personaclick.handlePush(push('zzz'), PushEvent.received);
+    final routed = await PersonaClick.handlePush(push('zzz'), PushEvent.received);
 
     expect(routed, isNull);
     expect(nativeCalls, isEmpty);
   });
 
   test('no shop_id with a single live shop falls back to it', () async {
-    Personaclick.initialize(cfg('A'));
+    PersonaClick.initialize(cfg('A'));
 
-    final routed = await Personaclick.handlePush(push(null), PushEvent.received);
+    final routed = await PersonaClick.handlePush(push(null), PushEvent.received);
 
     expect(routed, 'A');
     expect(nativeCalls, hasLength(1));
   });
 
   test('no shop_id with two live shops is ambiguous and dropped', () async {
-    Personaclick.initialize(cfg('A'));
-    Personaclick.initialize(cfg('B'));
+    PersonaClick.initialize(cfg('A'));
+    PersonaClick.initialize(cfg('B'));
 
-    final routed = await Personaclick.handlePush(push(null), PushEvent.received);
+    final routed = await PersonaClick.handlePush(push(null), PushEvent.received);
 
     expect(routed, isNull);
     expect(nativeCalls, isEmpty);
   });
 
   test('materializes a pending shop and routes to it', () async {
-    Personaclick.registerShops([cfg('A')]);
-    expect(Personaclick.liveShopIds, isEmpty);
+    PersonaClick.registerShops([cfg('A')]);
+    expect(PersonaClick.liveShopIds, isEmpty);
 
-    final routed = await Personaclick.handlePush(push('A'), PushEvent.received);
+    final routed = await PersonaClick.handlePush(push('A'), PushEvent.received);
 
     expect(routed, 'A');
-    expect(Personaclick.liveShopIds, ['A']); // materialized on the push
+    expect(PersonaClick.liveShopIds, ['A']); // materialized on the push
   });
 
   test('fires only the target shop callbacks', () async {
-    Personaclick.initialize(cfg('A'));
-    Personaclick.initialize(cfg('B'));
+    PersonaClick.initialize(cfg('A'));
+    PersonaClick.initialize(cfg('B'));
     Map<String, String?>? gotA;
     Map<String, String?>? gotB;
     handles['A']!.setPushNotificationCallbacks(onReceived: (p) => gotA = p);
     handles['B']!.setPushNotificationCallbacks(onReceived: (p) => gotB = p);
 
-    await Personaclick.handlePush(push('B'), PushEvent.received);
+    await PersonaClick.handlePush(push('B'), PushEvent.received);
 
     expect(gotB, isNotNull);
     expect(gotB!['shop_id'], 'B');

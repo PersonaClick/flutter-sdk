@@ -1,10 +1,10 @@
 import Flutter
 import UIKit
-import PERSONACLICK
+import PersonaClick
 import Foundation
 import UserNotifications
 
-public class PersonaclickFlutterSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycleDelegate {
+public class PersonaClickFlutterSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycleDelegate {
   static var sdk: PersonalizationSDK?
   static var notificationService: NotificationServiceProtocol?
   static let pushTokenKey = "personaclick_flutter_push_token"
@@ -13,7 +13,7 @@ public class PersonaclickFlutterSdkPlugin: NSObject, FlutterPlugin, FlutterAppli
   private var flutterApi: PersonalizationFlutterApi?
 
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let instance = PersonaclickFlutterSdkPlugin()
+    let instance = PersonaClickFlutterSdkPlugin()
     instance.messenger = registrar.messenger()
     instance.api = PersonalizationHostApiImpl()
     instance.flutterApi = PersonalizationFlutterApi(binaryMessenger: registrar.messenger())
@@ -32,8 +32,8 @@ public class PersonaclickFlutterSdkPlugin: NSObject, FlutterPlugin, FlutterAppli
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
-    UserDefaults.standard.set(deviceToken, forKey: PersonaclickFlutterSdkPlugin.pushTokenKey)
-    PersonaclickFlutterSdkPlugin.notificationService?
+    UserDefaults.standard.set(deviceToken, forKey: PersonaClickFlutterSdkPlugin.pushTokenKey)
+    PersonaClickFlutterSdkPlugin.notificationService?
       .didRegisterForRemoteNotificationsWithDeviceToken(deviceToken: deviceToken)
   }
 
@@ -47,7 +47,7 @@ public class PersonaclickFlutterSdkPlugin: NSObject, FlutterPlugin, FlutterAppli
       payload: Self._stringPayload(userInfo)
     ) { _ in }
 
-    PersonaclickFlutterSdkPlugin.notificationService?
+    PersonaClickFlutterSdkPlugin.notificationService?
       .didReceiveRemoteNotifications(application, didReceiveRemoteNotification: userInfo) { result, _ in
         completionHandler(result)
       }
@@ -56,7 +56,7 @@ public class PersonaclickFlutterSdkPlugin: NSObject, FlutterPlugin, FlutterAppli
 }
 
 @available(iOS 10.0, *)
-extension PersonaclickFlutterSdkPlugin: UNUserNotificationCenterDelegate {
+extension PersonaClickFlutterSdkPlugin: UNUserNotificationCenterDelegate {
   public func userNotificationCenter(
     _ center: UNUserNotificationCenter,
     didReceive response: UNNotificationResponse,
@@ -86,7 +86,7 @@ extension PersonaclickFlutterSdkPlugin: UNUserNotificationCenterDelegate {
   }
 }
 
-extension PersonaclickFlutterSdkPlugin {
+extension PersonaClickFlutterSdkPlugin {
   /// The shop the push is addressed to — its `shop_id`, resolved by the Dart
   /// dispatcher to the matching handle's callbacks (nil falls back to the single
   /// default).
@@ -113,18 +113,18 @@ extension PersonaclickFlutterSdkPlugin {
 }
 
 final class PersonalizationHostApiImpl: PersonalizationHostApi {
-  /// Resolves the SDK instance a call targets via the multi-instance `Personaclick`
+  /// Resolves the SDK instance a call targets via the multi-instance `PersonaClick`
   /// facade. `shopId == nil` resolves the single default instance; an unknown or
   /// (with no id) ambiguous shop throws, which `try?` turns into `nil` — the
   /// caller then reports `not_initialized`. This is the F3 wiring; requires the
-  /// native `Personaclick` facade (local `ios-sdk` via Podfile `:path`, or a pod
+  /// native `PersonaClick` facade (local `ios-sdk` via Podfile `:path`, or a pod
   /// version that ships it).
   private func sdk(_ shopId: String?) -> PersonalizationSDK? {
-    return try? Personaclick.instance(for: shopId)
+    return try? PersonaClick.instance(for: shopId)
   }
 
   func getStoredPushToken(shopId: String?) throws -> String? {
-    guard let deviceToken = UserDefaults.standard.data(forKey: PersonaclickFlutterSdkPlugin.pushTokenKey) else {
+    guard let deviceToken = UserDefaults.standard.data(forKey: PersonaClickFlutterSdkPlugin.pushTokenKey) else {
       return nil
     }
     let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
@@ -138,9 +138,9 @@ final class PersonalizationHostApiImpl: PersonalizationHostApi {
     }
 
     // F3: initialize (and register) the instance through the multi-instance
-    // `Personaclick` facade so it is reachable by `shopId` via `Personaclick.instance(for:)`.
-    let sdk = Personaclick.initialize(
-      PersonaclickConfig(
+    // `PersonaClick` facade so it is reachable by `shopId` via `PersonaClick.instance(for:)`.
+    let sdk = PersonaClick.initialize(
+      PersonaClickConfig(
         shopId: config.shopId,
         apiDomain: config.apiDomain,
         stream: config.stream,
@@ -160,11 +160,11 @@ final class PersonalizationHostApiImpl: PersonalizationHostApi {
 
     // Kept for the AppDelegate push path (device token / remote notification),
     // which still uses the last-initialized instance until F4 routes by shop.
-    PersonaclickFlutterSdkPlugin.sdk = sdk
+    PersonaClickFlutterSdkPlugin.sdk = sdk
 
     // Create notification service to receive AppDelegate callbacks (device token, remote notification).
     let logger = NotificationLogger()
-    PersonaclickFlutterSdkPlugin.notificationService = NotificationService(
+    PersonaClickFlutterSdkPlugin.notificationService = NotificationService(
       sdk: sdk,
       notificationLogger: logger
     )
@@ -244,7 +244,7 @@ final class PersonalizationHostApiImpl: PersonalizationHostApi {
     return dict
   }
 
-  private static func _categoryToDict(_ c: PERSONACLICK.Category) -> [String: Any] {
+  private static func _categoryToDict(_ c: PersonaClick.Category) -> [String: Any] {
     var dict: [String: Any] = ["id": c.id, "name": c.name]
     if let parentId = c.parentId { dict["parent_id"] = parentId }
     if let url = c.url { dict["url"] = url }
@@ -315,7 +315,7 @@ final class PersonalizationHostApiImpl: PersonalizationHostApi {
   }
 
   private static func _productsListResponseToDict(_ r: ProductsListResponse) -> [String: Any] {
-    // As of PERSONACLICK 3.24+, ProductsListResponse.products is [Product] (not [ProductInfo]);
+    // As of PersonaClick 3.24+, ProductsListResponse.products is [Product] (not [ProductInfo]);
     // Product carries no categories, which the Dart parser already treats as optional.
     var dict: [String: Any] = [
       "products": r.products.map { _searchProductToDict($0) },
@@ -537,7 +537,7 @@ final class PersonalizationHostApiImpl: PersonalizationHostApi {
     return dict
   }
 
-  private static func _searchCategoryToDict(_ c: PERSONACLICK.Category) -> [String: Any] {
+  private static func _searchCategoryToDict(_ c: PersonaClick.Category) -> [String: Any] {
     var dict: [String: Any] = ["id": c.id, "name": c.name]
     if let url = c.url { dict["url"] = url }
     if let parent = c.parentId { dict["parent"] = parent }
@@ -795,7 +795,7 @@ final class PersonalizationHostApiImpl: PersonalizationHostApi {
       completion(.failure(PigeonError(code: "not_initialized", message: "SDK is not initialized", details: nil)))
       return
     }
-    // As of PERSONACLICK 3.24+, `setProfileData` takes individual named parameters
+    // As of PersonaClick 3.24+, `setProfileData` takes individual named parameters
     // instead of a `ProfileData` value.
     var gender: Gender?
     if let genderStr = params.gender {
@@ -1154,7 +1154,7 @@ final class PersonalizationHostApiImpl: PersonalizationHostApi {
     case 2: pushEvent = .clicked
     default: pushEvent = .received
     }
-    Personaclick.handlePush(payload as [AnyHashable: Any], event: pushEvent)
+    PersonaClick.handlePush(payload as [AnyHashable: Any], event: pushEvent)
     completion(.success(()))
   }
 

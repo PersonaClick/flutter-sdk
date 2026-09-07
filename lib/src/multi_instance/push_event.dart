@@ -1,4 +1,4 @@
-/// Push lifecycle event routed by [Personaclick.handlePush].
+/// Push lifecycle event routed by [PersonaClick.handlePush].
 ///
 /// The Flutter vocabulary — `received` / `delivered` / `clicked` — matches the
 /// SDK's existing push callbacks. Native maps it to its own set: Android

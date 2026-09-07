@@ -1,6 +1,6 @@
 import XCTest
 
-@testable import PERSONACLICK
+@testable import PersonaClick
 @testable import personaclick_sdk
 
 /// The Swift side of the Flutter bridge: everything Dart sends arrives as a pigeon wire struct and

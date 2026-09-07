@@ -5,7 +5,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import android.util.Log
-import com.personalization.Personaclick
+import com.personalization.PersonaClick
 
 /**
  * Bootstraps push handling at process start — including the cold process FCM spins up just to
@@ -13,44 +13,44 @@ import com.personalization.Personaclick
  *
  * A [ContentProvider.onCreate] runs before `Application.onCreate` and before the SDK's messaging
  * services, the same auto-initialization trick `FirebaseInitProvider` uses. On a cold start Dart
- * never runs, so nothing has registered the shops — and `Personaclick.handlePush` (called by the SDK's
+ * never runs, so nothing has registered the shops — and `PersonaClick.handlePush` (called by the SDK's
  * `MessagingService`) would resolve no shop and drop the push. So here we:
- *   1. re-register every shop initialized in a previous run (persisted in [PersonaclickShopStore]),
- *      lazily — [Personaclick.handlePush] brings a pending shop up just enough to display and track;
+ *   1. re-register every shop initialized in a previous run (persisted in [PersonaClickShopStore]),
+ *      lazily — [PersonaClick.handlePush] brings a pending shop up just enough to display and track;
  *   2. attach the shop-aware [com.personalization.OnShopMessageListener] via the facade, so a
  *      routed push posts the heads-up BigPicture.
  *
  * On a normal launch this listener is replaced by the plugin's full listener (which also forwards
  * the push to Dart) when Dart calls `initialize()`.
  */
-class PersonaclickPushInitProvider : ContentProvider() {
+class PersonaClickPushInitProvider : ContentProvider() {
 
     override fun onCreate(): Boolean {
         val context = context?.applicationContext ?: return false
         try {
-            PersonaclickPushNotifier.ensureChannel(context)
+            PersonaClickPushNotifier.ensureChannel(context)
 
             // Re-register shops from a previous run so the cold-start registry is non-empty and
-            // Personaclick.handlePush can resolve the push instead of dropping it.
-            val shops = PersonaclickShopStore.read(context)
+            // PersonaClick.handlePush can resolve the push instead of dropping it.
+            val shops = PersonaClickShopStore.read(context)
             if (shops.isNotEmpty()) {
-                Personaclick.registerShops(context = context, configs = shops, eagerInit = false)
+                PersonaClick.registerShops(context = context, configs = shops, eagerInit = false)
             }
 
             // Shop-aware display listener via the facade, matching the running-app path: the SDK
             // routes each push to its shop and fires this to post the notification.
-            Personaclick.setOnMessageListener { shopId, data ->
-                Log.d(PersonaclickPushNotifier.TAG, "onMessage (provider listener) shop=$shopId id=${data.id}")
+            PersonaClick.setOnMessageListener { shopId, data ->
+                Log.d(PersonaClickPushNotifier.TAG, "onMessage (provider listener) shop=$shopId id=${data.id}")
                 // Off the main thread: show() downloads the image synchronously.
-                Thread { PersonaclickPushNotifier.show(context, data) }.start()
+                Thread { PersonaClickPushNotifier.show(context, data) }.start()
             }
             Log.d(
-                PersonaclickPushNotifier.TAG,
+                PersonaClickPushNotifier.TAG,
                 "provider installed cold-start push listener (${shops.size} shop(s) re-registered)",
             )
         } catch (t: Throwable) {
             // Never let push bootstrap crash the host process at startup.
-            Log.e(PersonaclickPushNotifier.TAG, "provider failed to install push listener", t)
+            Log.e(PersonaClickPushNotifier.TAG, "provider failed to install push listener", t)
         }
         return true
     }

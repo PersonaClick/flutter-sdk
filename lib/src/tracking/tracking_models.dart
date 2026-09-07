@@ -1,7 +1,7 @@
 /// One product line in a tracking event.
 ///
 /// [quantity] is the domain name for the line quantity; on the wire it is sent as `amount` —
-/// the field the PERSONACLICK API has always consumed.
+/// the field the PersonaClick API has always consumed.
 class TrackingItem {
   final String id;
   final int quantity;
