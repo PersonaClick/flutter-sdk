@@ -8,7 +8,7 @@ import 'sdk_exceptions.dart';
 
 /// Builds and initializes a [PersonalizationSdk] handle for [config]. Injectable
 /// so tests can resolve shops without touching native or Pigeon.
-typedef PersonaclickSdkFactory = PersonalizationSdk Function(PersonaclickConfig config);
+typedef PersonaClickSdkFactory = PersonalizationSdk Function(PersonaClickConfig config);
 
 /// Public entry point for the Flutter SDK — the unified, multi-instance API.
 ///
@@ -18,12 +18,12 @@ typedef PersonaclickSdkFactory = PersonalizationSdk Function(PersonaclickConfig 
 ///
 /// ```dart
 /// // Single shop:
-/// final sdk = Personaclick.initialize(PersonaclickConfig(shopId: 'SHOP_ID'));
+/// final sdk = PersonaClick.initialize(PersonaClickConfig(shopId: 'SHOP_ID'));
 /// sdk.trackEvent('category', ...);
 ///
 /// // Several shops, initialized lazily on first use:
-/// Personaclick.registerShops([PersonaclickConfig(shopId: 'shop-a'), PersonaclickConfig(shopId: 'shop-b')]);
-/// Personaclick.getInstance('shop-a').trackEvent('category', ...);
+/// PersonaClick.registerShops([PersonaClickConfig(shopId: 'shop-a'), PersonaClickConfig(shopId: 'shop-b')]);
+/// PersonaClick.getInstance('shop-a').trackEvent('category', ...);
 /// ```
 ///
 /// ## Why the facade holds a shop-id mirror
@@ -37,14 +37,14 @@ typedef PersonaclickSdkFactory = PersonalizationSdk Function(PersonaclickConfig 
 /// remains the source of truth for the instances themselves.
 ///
 /// Per-call routing to a specific native instance (threading `shopId` through
-/// every Pigeon call) lands once the native `Personaclick` facade ships in the
+/// every Pigeon call) lands once the native `PersonaClick` facade ships in the
 /// consumed artifacts — see the plan (`Multi-instance — Flutter Plan`, step F3).
 /// Until then single-shop [initialize] is fully functional and the resolution
 /// contract below is complete and tested.
-class Personaclick {
-  Personaclick._();
+class PersonaClick {
+  PersonaClick._();
 
-  static final Personaclick _instance = Personaclick._();
+  static final PersonaClick _instance = PersonaClick._();
 
   /// Live (initialized) instances by shop id. The Dart-side mirror of the
   /// native registry — used for resolution only.
@@ -52,14 +52,14 @@ class Personaclick {
 
   /// Shops registered lazily and not yet initialized. Materialized on the first
   /// [getInstance] for the shop.
-  final Map<String, PersonaclickConfig> _pending = <String, PersonaclickConfig>{};
+  final Map<String, PersonaClickConfig> _pending = <String, PersonaClickConfig>{};
 
-  PersonaclickSdkFactory _factory = _defaultFactory;
+  PersonaClickSdkFactory _factory = _defaultFactory;
 
-  static PersonalizationSdk _defaultFactory(PersonaclickConfig config) {
+  static PersonalizationSdk _defaultFactory(PersonaClickConfig config) {
     final sdk = PersonalizationSdk(shopId: config.shopId);
     // F1: delegates to the existing single-shop native init. Per-call `shopId`
-    // routing to the native `Personaclick` facade lands in plan step F3.
+    // routing to the native `PersonaClick` facade lands in plan step F3.
     sdk.initialize(config.toSdkInitConfig());
     return sdk;
   }
@@ -71,7 +71,7 @@ class Personaclick {
   /// Initializes an SDK instance for [config] immediately and returns it. The
   /// instance is registered, so it is also reachable via [getInstance]. Any
   /// pending registration for the same shop is cleared.
-  static PersonalizationSdk initialize(PersonaclickConfig config) =>
+  static PersonalizationSdk initialize(PersonaClickConfig config) =>
       _instance._initialize(config);
 
   /// Registers [configs] without initializing them. Initialization happens
@@ -79,7 +79,7 @@ class Personaclick {
   /// the current region is needed. Pass [eagerInit] = true to initialize every
   /// shop up front — the super-shop case, where instances must stay consistent.
   static void registerShops(
-    List<PersonaclickConfig> configs, {
+    List<PersonaClickConfig> configs, {
     bool eagerInit = false,
   }) => _instance._registerShops(configs, eagerInit: eagerInit);
 
@@ -99,7 +99,7 @@ class Personaclick {
       _instance._isInitialized(shopId);
 
   /// Routes a push to the shop it belongs to (the payload's `shop_id`) and tracks
-  /// [event] for it via the native `Personaclick.handlePush`, then fires that shop's
+  /// [event] for it via the native `PersonaClick.handlePush`, then fires that shop's
   /// registered push callbacks. Call this from a host that owns its messaging
   /// service.
   ///
@@ -126,14 +126,14 @@ class Personaclick {
   // Instance implementation
   // ---------------------------------------------------------------------------
 
-  PersonalizationSdk _initialize(PersonaclickConfig config) {
+  PersonalizationSdk _initialize(PersonaClickConfig config) {
     final sdk = _factory(config);
     _live[config.shopId] = sdk;
     _pending.remove(config.shopId);
     return sdk;
   }
 
-  void _registerShops(List<PersonaclickConfig> configs, {required bool eagerInit}) {
+  void _registerShops(List<PersonaClickConfig> configs, {required bool eagerInit}) {
     for (final config in configs) {
       if (eagerInit) {
         _initialize(config);
@@ -210,7 +210,7 @@ class Personaclick {
   /// Test-only: overrides the factory that builds/initializes instances so shop
   /// resolution can be exercised without touching native or Pigeon.
   @visibleForTesting
-  static set debugFactory(PersonaclickSdkFactory factory) =>
+  static set debugFactory(PersonaClickSdkFactory factory) =>
       _instance._factory = factory;
 
   /// Test-only: drops all live and pending registrations and restores the

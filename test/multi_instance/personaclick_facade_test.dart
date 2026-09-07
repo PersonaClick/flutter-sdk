@@ -12,96 +12,96 @@ void main() {
   // resolution contract testable without native or a live Pigeon channel.
   late List<String> built;
 
-  PersonaclickConfig cfg(String shopId) => PersonaclickConfig(shopId: shopId);
+  PersonaClickConfig cfg(String shopId) => PersonaClickConfig(shopId: shopId);
 
   setUp(() {
     built = <String>[];
-    Personaclick.debugFactory = (config) {
+    PersonaClick.debugFactory = (config) {
       built.add(config.shopId);
       return PersonalizationSdk(shopId: config.shopId);
     };
   });
 
-  tearDown(Personaclick.reset);
+  tearDown(PersonaClick.reset);
 
   group('initialize', () {
     test('returns a handle bound to the shop and marks it live', () {
-      final sdk = Personaclick.initialize(cfg('a'));
+      final sdk = PersonaClick.initialize(cfg('a'));
 
       expect(sdk.shopId, 'a');
       expect(built, ['a']);
-      expect(Personaclick.isInitialized('a'), isTrue);
-      expect(Personaclick.liveShopIds, ['a']);
+      expect(PersonaClick.isInitialized('a'), isTrue);
+      expect(PersonaClick.liveShopIds, ['a']);
     });
 
     test('clears any pending registration for the same shop', () {
-      Personaclick.registerShops([cfg('a')]);
-      expect(Personaclick.pendingShopIds, ['a']);
+      PersonaClick.registerShops([cfg('a')]);
+      expect(PersonaClick.pendingShopIds, ['a']);
 
-      Personaclick.initialize(cfg('a'));
+      PersonaClick.initialize(cfg('a'));
 
-      expect(Personaclick.pendingShopIds, isEmpty);
-      expect(Personaclick.liveShopIds, ['a']);
+      expect(PersonaClick.pendingShopIds, isEmpty);
+      expect(PersonaClick.liveShopIds, ['a']);
     });
   });
 
   group('registerShops', () {
     test('lazy by default — registers without building', () {
-      Personaclick.registerShops([cfg('a'), cfg('b')]);
+      PersonaClick.registerShops([cfg('a'), cfg('b')]);
 
       expect(built, isEmpty);
-      expect(Personaclick.pendingShopIds, ['a', 'b']);
-      expect(Personaclick.isInitialized('a'), isFalse);
+      expect(PersonaClick.pendingShopIds, ['a', 'b']);
+      expect(PersonaClick.isInitialized('a'), isFalse);
     });
 
     test('eagerInit builds every shop up front', () {
-      Personaclick.registerShops([cfg('a'), cfg('b')], eagerInit: true);
+      PersonaClick.registerShops([cfg('a'), cfg('b')], eagerInit: true);
 
       expect(built, ['a', 'b']);
-      expect(Personaclick.liveShopIds, ['a', 'b']);
-      expect(Personaclick.pendingShopIds, isEmpty);
+      expect(PersonaClick.liveShopIds, ['a', 'b']);
+      expect(PersonaClick.pendingShopIds, isEmpty);
     });
   });
 
   group('getInstance', () {
     test('no id, single live shop → that instance', () {
-      Personaclick.initialize(cfg('a'));
-      expect(Personaclick.getInstance().shopId, 'a');
+      PersonaClick.initialize(cfg('a'));
+      expect(PersonaClick.getInstance().shopId, 'a');
     });
 
     test('explicit id returns the matching live instance', () {
-      Personaclick.initialize(cfg('a'));
-      Personaclick.initialize(cfg('b'));
-      expect(Personaclick.getInstance('b').shopId, 'b');
+      PersonaClick.initialize(cfg('a'));
+      PersonaClick.initialize(cfg('b'));
+      expect(PersonaClick.getInstance('b').shopId, 'b');
     });
 
     test('materializes a pending shop on first use', () {
-      Personaclick.registerShops([cfg('a')]);
+      PersonaClick.registerShops([cfg('a')]);
       expect(built, isEmpty);
 
-      final sdk = Personaclick.getInstance('a');
+      final sdk = PersonaClick.getInstance('a');
 
       expect(sdk.shopId, 'a');
       expect(built, ['a']);
-      expect(Personaclick.liveShopIds, ['a']);
-      expect(Personaclick.pendingShopIds, isEmpty);
+      expect(PersonaClick.liveShopIds, ['a']);
+      expect(PersonaClick.pendingShopIds, isEmpty);
     });
 
     test('materializes a pending shop only once', () {
-      Personaclick.registerShops([cfg('a')]);
-      final first = Personaclick.getInstance('a');
-      final second = Personaclick.getInstance('a');
+      PersonaClick.registerShops([cfg('a')]);
+      final first = PersonaClick.getInstance('a');
+      final second = PersonaClick.getInstance('a');
 
       expect(built, ['a']); // built once
       expect(identical(first, second), isTrue);
     });
 
     test('no id with several shops → AmbiguousShopException', () {
-      Personaclick.initialize(cfg('a'));
-      Personaclick.registerShops([cfg('b')]);
+      PersonaClick.initialize(cfg('a'));
+      PersonaClick.registerShops([cfg('b')]);
 
       expect(
-        () => Personaclick.getInstance(),
+        () => PersonaClick.getInstance(),
         throwsA(
           isA<AmbiguousShopException>().having(
             (e) => e.registeredShopIds,
@@ -113,9 +113,9 @@ void main() {
     });
 
     test('unknown id → UnknownShopIdException', () {
-      Personaclick.initialize(cfg('a'));
+      PersonaClick.initialize(cfg('a'));
       expect(
-        () => Personaclick.getInstance('nope'),
+        () => PersonaClick.getInstance('nope'),
         throwsA(
           isA<UnknownShopIdException>().having(
             (e) => e.shopId,
@@ -128,7 +128,7 @@ void main() {
 
     test('no id with nothing registered → UnknownShopIdException', () {
       expect(
-        () => Personaclick.getInstance(),
+        () => PersonaClick.getInstance(),
         throwsA(isA<UnknownShopIdException>()),
       );
     });
@@ -136,17 +136,17 @@ void main() {
 
   group('isInitialized', () {
     test('null id true only when exactly one live shop', () {
-      expect(Personaclick.isInitialized(), isFalse);
-      Personaclick.initialize(cfg('a'));
-      expect(Personaclick.isInitialized(), isTrue);
-      Personaclick.initialize(cfg('b'));
-      expect(Personaclick.isInitialized(), isFalse); // ambiguous default
+      expect(PersonaClick.isInitialized(), isFalse);
+      PersonaClick.initialize(cfg('a'));
+      expect(PersonaClick.isInitialized(), isTrue);
+      PersonaClick.initialize(cfg('b'));
+      expect(PersonaClick.isInitialized(), isFalse); // ambiguous default
     });
 
     test('pending shop is not counted as initialized', () {
-      Personaclick.registerShops([cfg('a')]);
-      expect(Personaclick.isInitialized('a'), isFalse);
-      expect(Personaclick.isInitialized(), isFalse);
+      PersonaClick.registerShops([cfg('a')]);
+      expect(PersonaClick.isInitialized('a'), isFalse);
+      expect(PersonaClick.isInitialized(), isFalse);
     });
   });
 }

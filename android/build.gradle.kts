@@ -61,7 +61,7 @@ android {
 
     defaultConfig {
         minSdk = 24
-        // The PERSONACLICK Android library is flavored on a `default` dimension
+        // The PersonaClick Android library is flavored on a `default` dimension
         // (personaclick / personaclick); this plugin has no such dimension. Tell Gradle
         // which flavor to consume. A no-op for the single-variant JitPack artifact;
         // required when the SDK is consumed from source (local `includeBuild`).
@@ -86,7 +86,7 @@ android {
 }
 
 dependencies {
-    // PERSONACLICK Android SDK.
+    // PersonaClick Android SDK.
     val personaclickAndroidSdkVersion = "v2.38.0"
     add("personaclickImplementation", "com.github.personaclick:android-sdk:$personaclickAndroidSdkVersion")
 

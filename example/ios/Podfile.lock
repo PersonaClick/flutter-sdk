@@ -7,10 +7,10 @@ PODS:
     - CocoaAsyncSocket (~> 7.6)
     - Flutter
     - FlutterMacOS
-  - PERSONACLICK (3.33.0)
+  - PersonaClick (3.33.0)
   - personaclick_sdk (0.0.1):
     - Flutter
-    - PERSONACLICK (= 3.33.0)
+    - PersonaClick (= 3.33.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -21,7 +21,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - CocoaAsyncSocket
-    - PERSONACLICK
+    - PersonaClick
 
 EXTERNAL SOURCES:
   Flutter:
@@ -38,7 +38,7 @@ SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   patrol: cea8074f183a2a4232d0ebd10569ae05149ada42
-  PERSONACLICK: 92331668908a711e67515f368a9b00ed775fcffc
+  PersonaClick: 92331668908a711e67515f368a9b00ed775fcffc
   personaclick_sdk: 8ad2e581dcb34d936af65c5c7af8c9c4c84f5255
 
 PODFILE CHECKSUM: b6e248ac4c1eff5807c8b044b39b8bc326af3f5f

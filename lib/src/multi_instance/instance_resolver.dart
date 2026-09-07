@@ -1,4 +1,4 @@
-/// Pure decision logic behind [Personaclick.getInstance]: given the requested `shopId`
+/// Pure decision logic behind [PersonaClick.getInstance]: given the requested `shopId`
 /// (or none) and the sets of live and pending shops, decides which instance to
 /// return, whether one must be lazily materialized, or which error to raise.
 ///

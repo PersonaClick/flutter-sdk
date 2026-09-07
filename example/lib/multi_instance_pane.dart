@@ -8,7 +8,7 @@ import 'package:personaclick_sdk/personaclick_sdk.dart';
 /// default; shop B is registered lazily and comes to life the moment this screen
 /// resolves it. Everything each instance sends carries its own `shop_id`/`did`,
 /// so the two session cards (did/sid) are the in-app proof of isolation. Also
-/// exercises the fail-fast resolution contract and `Personaclick.handlePush` routing.
+/// exercises the fail-fast resolution contract and `PersonaClick.handlePush` routing.
 ///
 /// (The native demos also show per-shop Stories; the Flutter SDK exposes no
 /// stories widget, so that part is omitted here.)
@@ -42,20 +42,20 @@ class _MultiInstancePaneState extends State<MultiInstancePane> {
     super.initState();
 
     // Shop A — eager default.
-    _shopA = Personaclick.isInitialized(MultiInstancePane.shopIdA)
-        ? Personaclick.getInstance(MultiInstancePane.shopIdA)
-        : Personaclick.initialize(
-            const PersonaclickConfig(shopId: MultiInstancePane.shopIdA),
+    _shopA = PersonaClick.isInitialized(MultiInstancePane.shopIdA)
+        ? PersonaClick.getInstance(MultiInstancePane.shopIdA)
+        : PersonaClick.initialize(
+            const PersonaClickConfig(shopId: MultiInstancePane.shopIdA),
           );
 
     // Shop B — registered lazily, then materialized right here by resolving it.
-    if (!Personaclick.isInitialized(MultiInstancePane.shopIdB) &&
-        !Personaclick.pendingShopIds.contains(MultiInstancePane.shopIdB)) {
-      Personaclick.registerShops(const [
-        PersonaclickConfig(shopId: MultiInstancePane.shopIdB),
+    if (!PersonaClick.isInitialized(MultiInstancePane.shopIdB) &&
+        !PersonaClick.pendingShopIds.contains(MultiInstancePane.shopIdB)) {
+      PersonaClick.registerShops(const [
+        PersonaClickConfig(shopId: MultiInstancePane.shopIdB),
       ]);
     }
-    _shopB = Personaclick.getInstance(MultiInstancePane.shopIdB); // B is born here
+    _shopB = PersonaClick.getInstance(MultiInstancePane.shopIdB); // B is born here
 
     _shopA.setPushNotificationCallbacks(
       onReceived: (p) => _addLog('✓ shop A onReceived: ${_pushLabel(p)}'),
@@ -125,7 +125,7 @@ class _MultiInstancePaneState extends State<MultiInstancePane> {
       'title': note,
       'body': note,
     };
-    final routed = await Personaclick.handlePush(payload, PushEvent.received);
+    final routed = await PersonaClick.handlePush(payload, PushEvent.received);
     final result = routed != null ? 'routed:$routed' : 'dropped';
     setState(() => _lastPushResult = result);
     _addLog('injected shop_id=${shopId ?? '—'} → $result');
@@ -180,13 +180,13 @@ class _MultiInstancePaneState extends State<MultiInstancePane> {
             children: [
               ElevatedButton(
                 onPressed: () =>
-                    _runContract('getInstance()', () => Personaclick.getInstance()),
+                    _runContract('getInstance()', () => PersonaClick.getInstance()),
                 child: const Text('getInstance() → Ambiguous'),
               ),
               ElevatedButton(
                 onPressed: () => _runContract(
                   'getInstance("nope")',
-                  () => Personaclick.getInstance('nope'),
+                  () => PersonaClick.getInstance('nope'),
                 ),
                 child: const Text('getInstance("nope") → Unknown'),
               ),
@@ -200,7 +200,7 @@ class _MultiInstancePaneState extends State<MultiInstancePane> {
 
           const SizedBox(height: 16),
           const Text(
-            'Push routing (Personaclick.handlePush)',
+            'Push routing (PersonaClick.handlePush)',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           Wrap(

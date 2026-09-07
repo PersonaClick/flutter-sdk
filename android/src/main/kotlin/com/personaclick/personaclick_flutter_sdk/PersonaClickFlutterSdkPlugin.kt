@@ -16,8 +16,8 @@ import com.google.gson.Gson
 import com.personalization.Params
 import com.personalization.PushEventType
 import com.personalization.PushProvider
-import com.personalization.Personaclick
-import com.personalization.PersonaclickConfig
+import com.personalization.PersonaClick
+import com.personalization.PersonaClickConfig
 import com.personalization.SDK
 import com.personalization.api.OnApiCallbackListener
 import com.personalization.api.managers.TrackingApi
@@ -29,8 +29,8 @@ import com.personalization.api.models.tracking.TrackingSourceType
 import com.personalization.api.params.ProfileParams
 import com.personalization.api.params.SearchParams as NativeSearchParams
 import com.personalization.sdk.data.models.dto.notification.NotificationData
-import com.personaclick.personaclick_flutter_sdk.push.PersonaclickPushNotifier
-import com.personaclick.personaclick_flutter_sdk.push.PersonaclickShopStore
+import com.personaclick.personaclick_flutter_sdk.push.PersonaClickPushNotifier
+import com.personaclick.personaclick_flutter_sdk.push.PersonaClickShopStore
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -44,8 +44,8 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 
-/** PersonaclickFlutterSdkPlugin */
-class PersonaclickFlutterSdkPlugin :
+/** PersonaClickFlutterSdkPlugin */
+class PersonaClickFlutterSdkPlugin :
     FlutterPlugin,
     ActivityAware,
     PersonalizationHostApi {
@@ -57,7 +57,7 @@ class PersonaclickFlutterSdkPlugin :
     private val onNewIntentListener =
         object : PluginRegistry.NewIntentListener {
             override fun onNewIntent(intent: Intent): Boolean {
-                this@PersonaclickFlutterSdkPlugin.handleNotificationLaunchIntent(intent)
+                this@PersonaClickFlutterSdkPlugin.handleNotificationLaunchIntent(intent)
                 return false
             }
         }
@@ -105,14 +105,14 @@ class PersonaclickFlutterSdkPlugin :
     override fun getPlatformVersion(): String = "Android ${android.os.Build.VERSION.RELEASE}"
 
     /**
-     * Resolves the SDK instance a call targets via the multi-instance [Personaclick]
+     * Resolves the SDK instance a call targets via the multi-instance [PersonaClick]
      * facade. A null [shopId] resolves the single default instance; an unknown or
      * (with no id) ambiguous shop throws [com.personalization.UnknownShopIdException]
      * / [com.personalization.AmbiguousShopException], which the calling method turns
-     * into a Flutter error. This is the F3 wiring; requires the native `Personaclick`
+     * into a Flutter error. This is the F3 wiring; requires the native `PersonaClick`
      * facade (local `android-sdk` via `includeBuild`, or a version that ships it).
      */
-    private fun sdk(shopId: String?): SDK = Personaclick.getInstance(shopId)
+    private fun sdk(shopId: String?): SDK = PersonaClick.getInstance(shopId)
 
     override fun getStoredPushToken(shopId: String?): String? =
         try {
@@ -135,7 +135,7 @@ class PersonaclickFlutterSdkPlugin :
             return
         }
         try {
-            val shopConfig = PersonaclickConfig(
+            val shopConfig = PersonaClickConfig(
                 shopId = shopId,
                 apiDomain = config.apiDomain,
                 stream = config.stream,
@@ -143,23 +143,23 @@ class PersonaclickFlutterSdkPlugin :
                 needReInitialization = config.needReInitialization,
             )
             // F3: initialize (and register) the instance through the multi-instance
-            // `Personaclick` facade so it is reachable by shopId via Personaclick.getInstance.
-            Personaclick.initialize(context = applicationContext, config = shopConfig)
+            // `PersonaClick` facade so it is reachable by shopId via PersonaClick.getInstance.
+            PersonaClick.initialize(context = applicationContext, config = shopConfig)
 
-            // Persist so the cold-start push provider (PersonaclickPushInitProvider) can re-register this
+            // Persist so the cold-start push provider (PersonaClickPushInitProvider) can re-register this
             // shop on a process FCM spins up before Dart runs — otherwise the registry is empty and
-            // Personaclick.handlePush drops the push (killed-app "push never arrives" on Android).
-            PersonaclickShopStore.save(applicationContext, shopConfig)
+            // PersonaClick.handlePush drops the push (killed-app "push never arrives" on Android).
+            PersonaClickShopStore.save(applicationContext, shopConfig)
 
-            PersonaclickPushNotifier.ensureChannel(applicationContext)
+            PersonaClickPushNotifier.ensureChannel(applicationContext)
 
             // FL-5: one process-global, shop-aware listener (not per-instance) so a push for any
             // shop routes here with its shopId. Shows a heads-up BigPicture notification (pop-up,
             // image, tap opens the app) and forwards to Dart (onPushReceived / onPushDelivered)
             // tagged with the shop it routed to, so the Dart dispatcher delivers it to that shop.
-            Personaclick.setOnMessageListener { messageShopId, data ->
+            PersonaClick.setOnMessageListener { messageShopId, data ->
                 android.util.Log.d(
-                    PersonaclickPushNotifier.TAG,
+                    PersonaClickPushNotifier.TAG,
                     "onMessage (plugin listener) shop=$messageShopId id=${data.id}",
                 )
                 val payload = data.toPayload()
@@ -171,7 +171,7 @@ class PersonaclickFlutterSdkPlugin :
                 coroutineScope.launch {
                     runCatching { flutterApi?.onPushReceived(messageShopId, payload) { _ -> } }
                     withContext(Dispatchers.IO) {
-                        PersonaclickPushNotifier.show(applicationContext, data)
+                        PersonaClickPushNotifier.show(applicationContext, data)
                     }
                     runCatching { flutterApi?.onPushDelivered(messageShopId, payload) { _ -> } }
                 }
@@ -793,7 +793,7 @@ class PersonaclickFlutterSdkPlugin :
             // Flutter PushEvent index: 0=received, 1=delivered, 2=clicked. Android's
             // PushEventType has no `delivered`, so received & delivered both track received.
             val type = if (event.toInt() == 2) PushEventType.CLICKED else PushEventType.RECEIVED
-            Personaclick.handlePush(payload, type)
+            PersonaClick.handlePush(payload, type)
             callback(Result.success(Unit))
         } catch (t: Throwable) {
             callback(Result.failure(FlutterError("handle_push_failed", t.message, null)))
@@ -818,7 +818,7 @@ class PersonaclickFlutterSdkPlugin :
             // with the shop so the dispatcher delivers the click to it.
             val shopId = payload[SHOP_ID_KEY]
             val stringPayload = payload.filterValues { it != null }.mapValues { it.value!! }
-            Personaclick.handlePush(stringPayload, PushEventType.CLICKED)
+            PersonaClick.handlePush(stringPayload, PushEventType.CLICKED)
             flutterApi?.onPushClicked(shopId, payload) { _ -> }
         } catch (_: Throwable) {
             // SDK may not be initialized yet; ignore.

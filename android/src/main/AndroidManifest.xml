@@ -3,10 +3,10 @@
   <application>
     <!--
       Installs the push display listener at process start so pushes appear even when the app has
-      been swiped away (cold process, no Flutter engine running). See PersonaclickPushInitProvider.
+      been swiped away (cold process, no Flutter engine running). See PersonaClickPushInitProvider.
     -->
     <provider
-      android:name="com.personaclick.personaclick_flutter_sdk.push.PersonaclickPushInitProvider"
+      android:name="com.personaclick.personaclick_flutter_sdk.push.PersonaClickPushInitProvider"
       android:authorities="${applicationId}.personaclickpushinitprovider"
       android:exported="false" />
   </application>

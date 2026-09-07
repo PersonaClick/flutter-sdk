@@ -1,30 +1,30 @@
 package com.personaclick.personaclick_flutter_sdk.push
 
 import android.content.Context
-import com.personalization.PersonaclickConfig
+import com.personalization.PersonaClickConfig
 import org.json.JSONArray
 import org.json.JSONObject
 
 /**
  * Persists the configs of shops initialized from Dart, so the cold-start
- * [PersonaclickPushInitProvider] can re-register them in a process the Flutter engine never ran in —
+ * [PersonaClickPushInitProvider] can re-register them in a process the Flutter engine never ran in —
  * the cold process FCM spins up just to deliver a push after the app was swiped away.
  *
- * Without this the registry is empty on a cold start, so `Personaclick.handlePush` (called by the SDK's
+ * Without this the registry is empty on a cold start, so `PersonaClick.handlePush` (called by the SDK's
  * `MessagingService`) resolves no shop and drops the push — no notification appears. On Android
- * the app draws the notification itself (PERSONACLICK pushes are data messages), so it must have the
+ * the app draws the notification itself (PersonaClick pushes are data messages), so it must have the
  * shop registered. iOS needs none of this: its pushes are system-drawn APNs alert payloads, so a
  * registered token delivers regardless of whether the app runs.
  *
  * Upsert-only by shopId; not cleared (a shop that stops receiving simply stops being pushed to).
  */
-internal object PersonaclickShopStore {
+internal object PersonaClickShopStore {
 
     private const val PREFS = "personaclick_flutter_push_shops"
     private const val KEY_CONFIGS = "configs"
 
     /** Records [config] (upsert by shopId) so it survives to the next cold process start. */
-    fun save(context: Context, config: PersonaclickConfig) {
+    fun save(context: Context, config: PersonaClickConfig) {
         val byId = read(context).associateByTo(LinkedHashMap()) { it.shopId }
         byId[config.shopId] = config
         val array = JSONArray()
@@ -42,7 +42,7 @@ internal object PersonaclickShopStore {
     }
 
     /** All persisted shop configs, or empty if none / unreadable. */
-    fun read(context: Context): List<PersonaclickConfig> {
+    fun read(context: Context): List<PersonaClickConfig> {
         val raw = prefs(context).getString(KEY_CONFIGS, null) ?: return emptyList()
         return try {
             val array = JSONArray(raw)
@@ -50,7 +50,7 @@ internal object PersonaclickShopStore {
                 val obj = array.optJSONObject(i) ?: return@mapNotNull null
                 val shopId = obj.optString("shopId").takeIf { it.isNotBlank() }
                     ?: return@mapNotNull null
-                PersonaclickConfig(
+                PersonaClickConfig(
                     shopId = shopId,
                     apiDomain = obj.optString("apiDomain", "api.personaclick.com"),
                     stream = obj.optString("stream", "android"),

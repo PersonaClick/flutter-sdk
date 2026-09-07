@@ -1,3 +1,22 @@
+# [1.0.0](https://github.com/personaclick/flutter-sdk/compare/v0.4.0...v1.0.0) (2026-09-07)
+
+
+### Bug Fixes
+
+* **tracking:** let syncCart and syncFavorites report an empty collection ([a4b54aa](https://github.com/personaclick/flutter-sdk/commit/a4b54aaf17624782c0a4264544a0e59a8b46de95))
+
+
+* refactor(sdk)!: spell the facade PersonaClick ([d6678d6](https://github.com/personaclick/flutter-sdk/commit/d6678d669727b8cd996034ad642fcd0ea87b41b8))
+
+
+### BREAKING CHANGES
+
+* `PersonaClick` and friends are now `PersonaClick`.
+
+
+
+
+
 # [0.4.0](https://github.com/personaclick/flutter-sdk/compare/v0.3.0...v0.4.0) (2026-09-03)
 
 
@@ -31,7 +50,7 @@
 
 ### Features
 
-* **sdk:** multi-instance support — Personaclick facade, shop-aware push, demo ([77670a3](https://github.com/personaclick/flutter-sdk/commit/77670a32c43210fda488cc9be3cc0a1e6c77fed5))
+* **sdk:** multi-instance support — PersonaClick facade, shop-aware push, demo ([77670a3](https://github.com/personaclick/flutter-sdk/commit/77670a32c43210fda488cc9be3cc0a1e6c77fed5))
 
 
 
@@ -54,7 +73,7 @@
 ### Bug Fixes
 
 * display incoming push notifications on Android ([6040922](https://github.com/personaclick/flutter-sdk/commit/6040922493acff968292dba43e18083ab757148f))
-* **push:** resolve notification small icon from the host app, not PERSONACLICK ([5fbb549](https://github.com/personaclick/flutter-sdk/commit/5fbb549229fb24a2aa86786b1cce33caa072a207))
+* **push:** resolve notification small icon from the host app, not PersonaClick ([5fbb549](https://github.com/personaclick/flutter-sdk/commit/5fbb549229fb24a2aa86786b1cce33caa072a207))
 * tolerate string-encoded numbers in API response models ([a52c3f1](https://github.com/personaclick/flutter-sdk/commit/a52c3f1a193c3775204a114cb127434cc9446c8a))
 
 
@@ -77,7 +96,7 @@
 
 ## 0.0.1
 
-* Initial release: Flutter plugin wrapping the PERSONACLICK native Android and iOS
+* Initial release: Flutter plugin wrapping the PersonaClick native Android and iOS
   SDKs via a Pigeon bridge.
 * APIs: initialization, event tracking, purchase tracking, recommendations,
   product info, products list, blank/instant/full search, profile, and push

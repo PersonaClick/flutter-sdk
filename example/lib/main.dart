@@ -13,7 +13,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'PERSONACLICK Flutter SDK',
+      title: 'PersonaClick Flutter SDK',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
@@ -136,10 +136,10 @@ final List<_TrackingDemo> _trackingDemos = [
 ];
 
 class _InitPageState extends State<InitPage> {
-  // Initialized through the multi-instance [Personaclick] facade — the same entry
+  // Initialized through the multi-instance [PersonaClick] facade — the same entry
   // point the iOS/Android demos use — so shop A is registered in the facade and
   // the Multi-instance screen reaches the very same instance via
-  // Personaclick.getInstance(shopId). Bound to shop A explicitly, so every call stays
+  // PersonaClick.getInstance(shopId). Bound to shop A explicitly, so every call stays
   // unambiguous even after that screen brings a second shop to life. Assigned in
   // [_initialize] (rebuilt on re-initialize).
   late PersonalizationSdk _sdk;
@@ -288,10 +288,10 @@ class _InitPageState extends State<InitPage> {
       // Initialize shop A through the multi-instance facade — the unified entry
       // point, same as iOS/Android. Returns the handle and registers the shop,
       // so the Multi-instance screen resolves the very same instance via
-      // Personaclick.getInstance(shopId). Re-initializing rebuilds the handle with the
+      // PersonaClick.getInstance(shopId). Re-initializing rebuilds the handle with the
       // current toggles.
-      _sdk = Personaclick.initialize(
-        PersonaclickConfig(
+      _sdk = PersonaClick.initialize(
+        PersonaClickConfig(
           shopId: _shopId,
           apiDomain: _apiDomain,
           stream: _stream,
@@ -366,7 +366,7 @@ class _InitPageState extends State<InitPage> {
   Future<void> _setProfile() async {
     try {
       await _sdk.setProfile(
-        // Not example.com — the PERSONACLICK backend rejects RFC 2606 reserved test
+        // Not example.com — the PersonaClick backend rejects RFC 2606 reserved test
         // domains with 400 "Invalid email or missing".
         const ProfileParams(
           email: 'tester@personaclick.com',
@@ -722,7 +722,7 @@ class _InitPageState extends State<InitPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PERSONACLICK SDK init demo'),
+        title: const Text('PersonaClick SDK init demo'),
         actions: [
           IconButton(
             key: const Key('open-multi-instance'),

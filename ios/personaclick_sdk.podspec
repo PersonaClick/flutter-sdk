@@ -4,17 +4,17 @@
 Pod::Spec.new do |s|
   s.name             = 'personaclick_sdk'
   s.version          = '0.0.1'
-  s.summary          = 'Flutter plugin wrapper around PERSONACLICK native SDK.'
+  s.summary          = 'Flutter plugin wrapper around PersonaClick native SDK.'
   s.description      = <<-DESC
-Flutter plugin wrapper around PERSONACLICK native SDK.
+Flutter plugin wrapper around PersonaClick native SDK.
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'PERSONACLICK' => 'support@personaclick.com' }
+  s.author           = { 'PersonaClick' => 'support@personaclick.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'PERSONACLICK', '3.33.0'
+  s.dependency 'PersonaClick', '3.33.0'
   s.platform = :ios, '13.0'
 
   # Flutter.framework does not contain a i386 slice.

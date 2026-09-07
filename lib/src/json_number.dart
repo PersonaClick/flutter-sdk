@@ -1,4 +1,4 @@
-/// Tolerant numeric coercion for PERSONACLICK API responses.
+/// Tolerant numeric coercion for PersonaClick API responses.
 ///
 /// The API is not consistent about how it encodes numbers: some numeric fields
 /// arrive as JSON numbers, others as strings — e.g. a product's `price` comes

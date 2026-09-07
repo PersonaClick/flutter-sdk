@@ -8,7 +8,7 @@ import 'package:personaclick_sdk/personaclick_sdk.dart';
 /// methods through the example app's UI.
 ///
 /// Drives the actual native SDK (Android `loyaltyManager`, iOS
-/// `joinLoyalty`/`getLoyaltyStatus`) against the live PERSONACLICK API using a
+/// `joinLoyalty`/`getLoyaltyStatus`) against the live PersonaClick API using a
 /// loyalty-enabled shop. Runs as part of the Patrol suite.
 ///
 /// NOTE: this must be a `patrolTest`, not a plain `testWidgets` with

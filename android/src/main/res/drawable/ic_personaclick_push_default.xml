@@ -2,7 +2,7 @@
   Neutral, non-branded fallback for the push notification small icon.
 
   A small icon must be a white, alpha-only silhouette (the system tints it), so this is a plain
-  white disc. It is used ONLY as a last resort by PersonaclickPushNotifier.resolveSmallIcon when the host
+  white disc. It is used ONLY as a last resort by PersonaClickPushNotifier.resolveSmallIcon when the host
   app declares neither a `com.personaclick.push.notification_icon` meta-data icon nor a launcher icon.
   Host apps are expected to provide their own icon — see the README push section.
 -->
