@@ -1,6 +1,6 @@
 name: personaclick_sdk
 description: "Flutter plugin wrapping the PersonaClick native personalization SDKs for Android and iOS."
-version: 1.2.1
+version: 1.3.0
 homepage: https://github.com/personaclick/flutter-sdk
 repository: https://github.com/personaclick/flutter-sdk
 issue_tracker: https://github.com/personaclick/flutter-sdk/issues
