@@ -12,9 +12,15 @@ Flutter plugin wrapper around PersonaClick native SDK.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'PersonaClick' => 'support@personaclick.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  # The sources live where Swift Package Manager expects them (personaclick_sdk/Package.swift);
+  # CocoaPods builds the same files.
+  s.source_files = 'personaclick_sdk/Sources/personaclick_sdk/**/*.swift'
+  s.resource_bundles = {'personaclick_sdk_privacy' => ['personaclick_sdk/Sources/personaclick_sdk/PrivacyInfo.xcprivacy']}
   s.dependency 'Flutter'
-  s.dependency 'PersonaClick', '3.35.0'
+  # Keep in step with the dependency in personaclick_sdk/Package.swift. CocoaPods trunk is
+  # read-only, so a version newer than the last one there resolves only through the
+  # app's Podfile (see "iOS" in README.md).
+  s.dependency 'PersonaClick', '3.36.1'
   s.platform = :ios, '13.0'
 
   # Flutter.framework does not contain a i386 slice.

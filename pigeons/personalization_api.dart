@@ -12,7 +12,8 @@ import 'package:pigeon/pigeon.dart';
     kotlinOptions: KotlinOptions(
       package: 'com.personaclick.personaclick_flutter_sdk.pigeon',
     ),
-    swiftOut: 'ios/Classes/pigeon/PersonalizationApi.g.swift',
+    swiftOut:
+        'ios/personaclick_sdk/Sources/personaclick_sdk/pigeon/PersonalizationApi.g.swift',
   ),
 )
 class InitConfig {
