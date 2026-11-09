@@ -20,7 +20,7 @@ Flutter plugin wrapper around PersonaClick native SDK.
   # Keep in step with the dependency in personaclick_sdk/Package.swift. CocoaPods trunk is
   # read-only, so a version newer than the last one there resolves only through the
   # app's Podfile (see "iOS" in README.md).
-  s.dependency 'PersonaClick', '3.36.1'
+  s.dependency 'PersonaClick', '3.37.0'
   s.platform = :ios, '13.0'
 
   # Flutter.framework does not contain a i386 slice.

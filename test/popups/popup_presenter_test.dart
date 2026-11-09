@@ -4,8 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:personaclick_sdk/personaclick_sdk.dart';
 import 'package:personaclick_sdk/src/popups/popup_presenter.dart';
-import 'package:personaclick_sdk/src/ui/components/personalization_button.dart';
-import 'package:personaclick_sdk/src/ui/personalization_icons.dart';
 
 // A 1x1 transparent PNG: a picture that loads without the network.
 final Uint8List _pixel = Uint8List.fromList(<int>[

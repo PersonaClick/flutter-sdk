@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:personaclick_sdk/personaclick_sdk.dart';
 import 'package:personaclick_sdk/src/personalization_sdk.dart'
-    show PersonalizationStoriesBridge;
+    show PersonalizationStoryViewerBridge;
 import 'package:personaclick_sdk/src/pigeon/personalization_api.g.dart' as pigeon;
 import 'package:personaclick_sdk/src/stories/stories_response.dart';
 
