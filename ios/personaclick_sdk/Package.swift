@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         // Keep in step with the dependency in ../personaclick_sdk.podspec.
-        .package(url: "https://github.com/personaclick/ios-sdk.git", exact: "3.37.0")
+        .package(url: "https://github.com/personaclick/ios-sdk.git", exact: "3.37.1")
     ],
     targets: [
         .target(
