@@ -21,11 +21,12 @@ typedef PersonaClickSdkFactory = PersonalizationSdk Function(PersonaClickConfig 
 /// ```dart
 /// // Single shop:
 /// final sdk = PersonaClick.initialize(PersonaClickConfig(shopId: 'SHOP_ID'));
-/// sdk.trackEvent('category', ...);
+/// await sdk.ready; // optional: the outcome of the native init
+/// sdk.tracking.categoryView('category-1');
 ///
 /// // Several shops, initialized lazily on first use:
 /// PersonaClick.registerShops([PersonaClickConfig(shopId: 'shop-a'), PersonaClickConfig(shopId: 'shop-b')]);
-/// PersonaClick.getInstance('shop-a').trackEvent('category', ...);
+/// PersonaClick.getInstance('shop-a').tracking.categoryView('category-1');
 /// ```
 ///
 /// ## Why the facade holds a shop-id mirror
@@ -38,11 +39,8 @@ typedef PersonaClickSdkFactory = PersonalizationSdk Function(PersonaClickConfig 
 /// contract synchronously, identically to native. The native `SdkRegistry`
 /// remains the source of truth for the instances themselves.
 ///
-/// Per-call routing to a specific native instance (threading `shopId` through
-/// every Pigeon call) lands once the native `PersonaClick` facade ships in the
-/// consumed artifacts — see the plan (`Multi-instance — Flutter Plan`, step F3).
-/// Until then single-shop [initialize] is fully functional and the resolution
-/// contract below is complete and tested.
+/// Every call of a handle carries its `shopId` to the native instance of that
+/// shop.
 class PersonaClick {
   PersonaClick._();
 
@@ -60,9 +58,12 @@ class PersonaClick {
 
   static PersonalizationSdk _defaultFactory(PersonaClickConfig config) {
     final sdk = PersonalizationSdk(shopId: config.shopId);
-    // F1: delegates to the existing single-shop native init. Per-call `shopId`
-    // routing to the native `PersonaClick` facade lands in plan step F3.
-    sdk.initialize(config.toSdkInitConfig());
+    // The handle goes back at once; the outcome is in [PersonalizationSdk.ready].
+    // Listened to here, a failed init is not an unhandled error when the app does
+    // not await `ready`.
+    sdk.initialize(config.toSdkInitConfig()).catchError((Object error) {
+      debugPrint('PersonaClick: init of shop ${config.shopId} failed: $error');
+    });
     return sdk;
   }
 
@@ -72,7 +73,8 @@ class PersonaClick {
 
   /// Initializes an SDK instance for [config] immediately and returns it. The
   /// instance is registered, so it is also reachable via [getInstance]. Any
-  /// pending registration for the same shop is cleared.
+  /// pending registration for the same shop is cleared. The native init goes on
+  /// after the handle is back; its outcome is [PersonalizationSdk.ready].
   static PersonalizationSdk initialize(PersonaClickConfig config) =>
       _instance._initialize(config);
 
