@@ -6,9 +6,9 @@ import 'package:personaclick_sdk/personaclick_sdk.dart';
 import 'package:personaclick_sdk/src/pigeon/personalization_api.g.dart' as pigeon;
 
 const _joinChannel =
-    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.joinLoyalty';
+    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.legacyJoinLoyalty';
 const _statusChannel =
-    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.getLoyaltyStatus';
+    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.legacyGetLoyaltyStatus';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

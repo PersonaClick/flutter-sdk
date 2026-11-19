@@ -31,7 +31,7 @@ const _stubJson = {
 };
 
 const _channel =
-    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.searchBlank';
+    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.legacySearchBlank';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

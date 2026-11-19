@@ -6,7 +6,7 @@ import 'package:personaclick_sdk/personaclick_sdk.dart';
 import 'package:personaclick_sdk/src/pigeon/personalization_api.g.dart' as pigeon;
 
 const _setProfileChannel =
-    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.setProfile';
+    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.legacySetProfile';
 const _getSidChannel =
     'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.getSid';
 const _getDidChannel =

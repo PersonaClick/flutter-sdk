@@ -6,14 +6,14 @@ import PackageDescription
 let package = Package(
     name: "personaclick_sdk",
     platforms: [
-        .iOS("13.0")
+        .iOS("15.0")
     ],
     products: [
         .library(name: "personaclick-sdk", targets: ["personaclick_sdk"])
     ],
     dependencies: [
         // Keep in step with the dependency in ../personaclick_sdk.podspec.
-        .package(url: "https://github.com/personaclick/ios-sdk.git", exact: "3.37.3")
+        .package(url: "https://github.com/personaclick/ios-sdk.git", exact: "3.40.1")
     ],
     targets: [
         .target(

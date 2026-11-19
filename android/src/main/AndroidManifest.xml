@@ -9,5 +9,9 @@
       android:name="com.personaclick.personaclick_flutter_sdk.push.PersonaClickPushInitProvider"
       android:authorities="${applicationId}.personaclickpushinitprovider"
       android:exported="false" />
+    <!-- A notification the plugin drew was dismissed: track/closed. -->
+    <receiver
+      android:name="com.personaclick.personaclick_flutter_sdk.push.PersonaClickPushDismissReceiver"
+      android:exported="false" />
   </application>
 </manifest>

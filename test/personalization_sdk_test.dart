@@ -7,9 +7,9 @@ import 'package:personaclick_sdk/src/pigeon/personalization_api.g.dart' as pigeo
 
 // Channel names from generated Pigeon code.
 const _trackEventChannel =
-    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.trackEvent';
+    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.legacyTrackEvent';
 const _trackPurchaseChannel =
-    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.trackPurchase';
+    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.legacyTrackPurchase';
 // Stub channels registered by PersonalizationFlutterApi.setUp in the SDK ctor.
 const _onReceivedChannel =
     'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationFlutterApi.onPushReceived';

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:personaclick_sdk/src/multi_instance/personaclick.dart';
 import 'package:personaclick_sdk/src/multi_instance/personaclick_config.dart';
@@ -42,6 +43,48 @@ void main() {
 
       expect(PersonaClick.pendingShopIds, isEmpty);
       expect(PersonaClick.liveShopIds, ['a']);
+    });
+
+    test('a shop initialized already keeps its handle, as natively', () {
+      final first = PersonaClick.initialize(cfg('a'));
+      final second = PersonaClick.initialize(cfg('a'));
+
+      expect(identical(first, second), isTrue);
+      expect(built, ['a'], reason: 'no second handle over the native instance');
+      expect(identical(PersonaClick.getInstance('a'), first), isTrue);
+    });
+
+    test('another configuration is logged and not applied', () {
+      final logs = <String>[];
+      final before = debugPrint;
+      debugPrint = (String? message, {int? wrapWidth}) => logs.add('$message');
+      addTearDown(() => debugPrint = before);
+
+      final first = PersonaClick.initialize(cfg('a'));
+      final again = PersonaClick.initialize(
+        const PersonaClickConfig(shopId: 'a', stream: 'other'),
+      );
+      final same = PersonaClick.initialize(cfg('a'));
+
+      expect(identical(first, again), isTrue);
+      expect(identical(first, same), isTrue);
+      expect(built, ['a']);
+      expect(
+        logs.where((l) => l.contains('already_initialized')),
+        hasLength(1),
+      );
+    });
+
+    test('once released, the shop is initialized afresh', () {
+      final first = PersonaClick.initialize(cfg('a'));
+      first.release();
+
+      expect(PersonaClick.isInitialized('a'), isFalse);
+      final next = PersonaClick.initialize(cfg('a'));
+
+      expect(identical(first, next), isFalse);
+      expect(built, ['a', 'a']);
+      expect(identical(PersonaClick.getInstance('a'), next), isTrue);
     });
   });
 
@@ -131,6 +174,26 @@ void main() {
         () => PersonaClick.getInstance(),
         throwsA(isA<UnknownShopIdException>()),
       );
+    });
+
+    test('both are the contract\'s facade error, PersonaClickException', () {
+      PersonaClick.initialize(cfg('a'));
+      PersonaClick.initialize(cfg('b'));
+      PersonaClickErrorType? caught(void Function() call) {
+        try {
+          call();
+        } on PersonaClickException catch (e) {
+          expect(e.message, isNotEmpty);
+          return e.type;
+        }
+        return null;
+      }
+
+      expect(
+        caught(() => PersonaClick.getInstance('nope')),
+        PersonaClickErrorType.unknownShop,
+      );
+      expect(caught(PersonaClick.getInstance), PersonaClickErrorType.ambiguousShop);
     });
   });
 
