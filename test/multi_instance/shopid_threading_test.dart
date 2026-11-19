@@ -12,7 +12,7 @@ void main() {
   const sidChannel =
       'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.getSid';
   const trackChannel =
-      'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.trackEvent';
+      'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.legacyTrackEvent';
 
   late List<Object?> capturedGetSidArgs;
   late List<Object?> capturedTrackArgs;

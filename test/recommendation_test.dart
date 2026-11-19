@@ -6,7 +6,7 @@ import 'package:personaclick_sdk/personaclick_sdk.dart';
 import 'package:personaclick_sdk/src/pigeon/personalization_api.g.dart' as pigeon;
 
 const _getRecommendationChannel =
-    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.getRecommendation';
+    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.legacyGetRecommendation';
 const _onReceivedChannel =
     'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationFlutterApi.onPushReceived';
 const _onDeliveredChannel =

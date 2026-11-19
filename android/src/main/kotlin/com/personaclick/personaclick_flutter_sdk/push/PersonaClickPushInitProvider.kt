@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.util.Log
 import com.personalization.PersonaClick
+import com.personaclick.personaclick_flutter_sdk.BridgeShops
 
 /**
  * Bootstraps push handling at process start — including the cold process FCM spins up just to
@@ -13,12 +14,17 @@ import com.personalization.PersonaClick
  *
  * A [ContentProvider.onCreate] runs before `Application.onCreate` and before the SDK's messaging
  * services, the same auto-initialization trick `FirebaseInitProvider` uses. On a cold start Dart
- * never runs, so nothing has registered the shops — and `PersonaClick.handlePush` (called by the SDK's
+ * never runs, so nothing has started the shops — and `PersonaClick.handlePush` (called by the SDK's
  * `MessagingService`) would resolve no shop and drop the push. So here we:
- *   1. re-register every shop initialized in a previous run (persisted in [PersonaClickShopStore]),
- *      lazily — [PersonaClick.handlePush] brings a pending shop up just enough to display and track;
+ *   1. register every shop initialized in a previous run (persisted in [PersonaClickShopStore]) on the
+ *      native SDK's new core with `PersonaClick.registerBridge` — never `PersonaClick.register`, which asks for the
+ *      legacy core and would decide the whole process's core before Dart runs, leaving every namespace
+ *      `notInitialized`. A registration sends nothing: a push for a shop goes with its stored did and no
+ *      `/init`, so a process the app was never opened in costs no `/init`. Dart's `initialize()` makes
+ *      the full instance, with its `/init`, from Dart's configuration. A process start never resets the
+ *      device: `needReInitialization` is off here;
  *   2. attach the shop-aware [com.personalization.OnShopMessageListener] via the facade, so a
- *      routed push posts the heads-up BigPicture.
+ *      routed push posts the heads-up BigPicture and is reported shown.
  *
  * On a normal launch this listener is replaced by the plugin's full listener (which also forwards
  * the push to Dart) when Dart calls `initialize()`.
@@ -30,11 +36,12 @@ class PersonaClickPushInitProvider : ContentProvider() {
         try {
             PersonaClickPushNotifier.ensureChannel(context)
 
-            // Re-register shops from a previous run so the cold-start registry is non-empty and
-            // PersonaClick.handlePush can resolve the push instead of dropping it.
+            // Register the shops of a previous run so PersonaClick.handlePush can resolve the push instead
+            // of dropping it; no instance is made and nothing goes to the network.
             val shops = PersonaClickShopStore.read(context)
             if (shops.isNotEmpty()) {
-                PersonaClick.registerShops(context = context, configs = shops, eagerInit = false)
+                runCatching { PersonaClick.registerBridge(context, shops.map { it.copy(needReInitialization = false) }) }
+                    .onFailure { Log.e(PersonaClickPushNotifier.TAG, "provider could not register the stored shops", it) }
             }
 
             // Shop-aware display listener via the facade, matching the running-app path: the SDK
@@ -42,11 +49,13 @@ class PersonaClickPushInitProvider : ContentProvider() {
             PersonaClick.setOnMessageListener { shopId, data ->
                 Log.d(PersonaClickPushNotifier.TAG, "onMessage (provider listener) shop=$shopId id=${data.id}")
                 // Off the main thread: show() downloads the image synchronously.
-                Thread { PersonaClickPushNotifier.show(context, data) }.start()
+                Thread {
+                    if (PersonaClickPushNotifier.show(context, data, shopId)) PersonaClickPushNotifier.reportShown(shopId, data)
+                }.start()
             }
             Log.d(
                 PersonaClickPushNotifier.TAG,
-                "provider installed cold-start push listener (${shops.size} shop(s) re-registered)",
+                "provider installed cold-start push listener (${shops.size} shop(s) registered)",
             )
         } catch (t: Throwable) {
             // Never let push bootstrap crash the host process at startup.

@@ -6,13 +6,13 @@ import 'package:personaclick_sdk/personaclick_sdk.dart';
 import 'package:personaclick_sdk/src/pigeon/personalization_api.g.dart' as pigeon;
 
 const _profileChannel =
-    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.getProfile';
+    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.legacyGetProfile';
 const _countersChannel =
-    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.getProductCounters';
+    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.legacyGetProductCounters';
 const _categoryChannel =
-    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.getCategory';
+    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.legacyGetCategory';
 const _collectionChannel =
-    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.getCollection';
+    'dev.flutter.pigeon.personaclick_flutter_sdk.PersonalizationHostApi.legacyGetCollection';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

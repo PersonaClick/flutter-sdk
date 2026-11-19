@@ -1,6 +1,9 @@
 package com.personaclick.personaclick_flutter_sdk
 
+import com.personaclick.personaclick_flutter_sdk.pigeon.FlutterError
+import com.personaclick.personaclick_flutter_sdk.pigeon.SdkSnapshotWire
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 /*
@@ -16,5 +19,20 @@ internal class PersonaClickFlutterSdkPluginTest {
     fun getPlatformVersion_containsAndroidWord() {
         val plugin = PersonaClickFlutterSdkPlugin()
         assertTrue(plugin.getPlatformVersion().startsWith("Android "))
+    }
+
+    @Test
+    fun theRootOfAShopThePluginDoesNotKnowIsNotInitialized() {
+        val plugin = PersonaClickFlutterSdkPlugin()
+        val flushed = mutableListOf<Result<Unit>>()
+        val deleted = mutableListOf<Result<SdkSnapshotWire>>()
+
+        plugin.flush("unknown-shop") { flushed += it }
+        plugin.deleteUserCredentials("unknown-shop") { deleted += it }
+        // Released already: nothing to do, and nothing thrown.
+        plugin.release("unknown-shop")
+
+        val failures = listOf(flushed.single(), deleted.single()).map { it.exceptionOrNull() as FlutterError }
+        assertEquals(listOf("notInitialized", "notInitialized"), failures.map { it.code })
     }
 }
