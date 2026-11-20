@@ -51,7 +51,7 @@ maven(url = "https://jitpack.io")
 
 ### iOS
 
-The plugin declares the iOS 13.0 minimum itself and registers its own application
+The plugin declares the iOS 15.0 minimum itself and registers its own application
 delegate — your `AppDelegate` stays untouched.
 
 **With Swift Package Manager** — the default since Flutter 3.44, and on earlier
@@ -66,7 +66,7 @@ repository. The tag is the version the plugin requires — the `PersonaClick`
 dependency in [`ios/personaclick_sdk.podspec`](ios/personaclick_sdk.podspec):
 
 ```ruby
-pod 'PersonaClick', :git => 'https://github.com/personaclick/ios-sdk.git', :tag => 'v3.36.1'
+pod 'PersonaClick', :git => 'https://github.com/personaclick/ios-sdk.git', :tag => 'v3.40.1'
 ```
 
 `pod install` then runs as part of `flutter run`. Update the tag together with the
